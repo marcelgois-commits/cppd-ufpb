@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comissão Permanente de Pessoal Docente – Protótipo</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#20409a; --azul-esc:#1a3482; --marinho:#020f33; --texto:#202020; --texto-2:#595959;
+  --linha:#e8e8e8; --cinza:#f5f6f9; --cinza-2:#fbfbfb;
+  --verde:#1d7a4a; --verde-cl:#e6f4ec; --ambar:#9a5d07; --ambar-cl:#fdf3e2; --azul-cl:#e9eef9;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"IBM Plex Sans",Arial,sans-serif;color:var(--texto);background:#fff;font-size:16px;line-height:1.5}
+a{color:var(--azul);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+.c{max-width:1040px;margin:0 auto;padding:0 20px}
+.c-larga{max-width:1200px;margin:0 auto;padding:0 40px}
+
+/* aviso de protótipo */
+.proto{background:#fff4c2;border-bottom:1px solid #e3cf74;font-size:13px;color:#574600;padding:7px 0;text-align:center}
+.proto b{font-weight:600}
+
+/* ===== CABEÇALHO (igual ao site) ===== */
+header{background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);position:relative;z-index:5}
+.cab{display:flex;align-items:center;gap:26px;padding:16px 0 18px}
+.marca{display:flex;align-items:center;gap:22px;flex-shrink:0}
+.marca img{height:104px;width:auto}
+.marca .t1{color:var(--azul);font-weight:700;font-size:19px;line-height:1.2;text-transform:uppercase;max-width:150px}
+.marca .t2{color:var(--texto);font-weight:400;font-size:19px;line-height:1.2;max-width:150px}
+.direita{flex:1;display:flex;flex-direction:column;align-items:flex-end;gap:14px;min-width:0}
+.util{display:flex;align-items:center;gap:16px;font-size:14px;color:var(--texto-2)}
+.util a{color:var(--texto-2)}
+.util .sep{width:1px;height:22px;background:#d6d6d6}
+.util .busca{display:flex;align-items:center;border:1px solid #e0e0e0;border-radius:2px;padding:6px 10px;width:150px;color:#888;font-size:14px;justify-content:space-between}
+nav.menu ul{list-style:none;margin:0;padding:0;display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end}
+nav.menu a{color:var(--texto);font-size:16px;font-weight:450;padding:2px 0 4px;border-bottom:2.5px solid transparent;display:block}
+nav.menu a:hover{text-decoration:none;color:var(--azul)}
+nav.menu a.ativo{color:var(--azul);border-bottom-color:var(--azul)}
+.novo{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;background:#fff4c2;color:#574600;border:1px solid #e3cf74;border-radius:3px;padding:0 5px;margin-left:5px;vertical-align:2px;line-height:16px}
+
+/* ===== BANNER + CAIXA BRANCA (igual ao site) ===== */
+.banner{height:300px;background:#2b4f2e url("https://www.ufpb.br/cppd/wp-content/uploads/sites/79/sites/199/2025/11/DJI_0023-Personalizado-2-scaled-e1751283067234.webp") center/cover no-repeat}
+.caixa{background:#fff;margin-top:-160px;position:relative;padding:28px 42px 40px}
+.apres{display:grid;grid-template-columns:380px 1fr;gap:70px;align-items:start}
+.foto{height:300px;background:#ccc url("https://www.ufpb.br/cppd/wp-content/uploads/sites/79/sites/199/2024/07/Guarita.jpeg") center/cover}
+
+/* títulos de seção com o traço do site */
+.tsec{border-top:1px solid var(--linha);position:relative;padding-top:18px;margin:0 0 18px}
+.tsec:before{content:"";position:absolute;top:-2px;left:0;width:74px;height:3px;background:var(--azul)}
+.tsec h2{margin:0;font-size:20px;font-weight:500;color:var(--texto)}
+.tsec.azul h2{color:var(--azul);font-weight:600}
+.tsec p{margin:6px 0 0;color:var(--texto-2);font-size:15px}
+.texto-cinza{color:var(--texto-2)}
+.saiba{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha);padding:14px 0;margin-top:22px;font-weight:600;font-size:15px}
+.mais{display:flex;justify-content:flex-end;margin-top:18px;font-weight:600}
+section{padding:46px 0}
+section.cinza{background:var(--cinza)}
+
+/* cartões de perfil */
+.grid{display:grid;gap:22px}
+.g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+.perfil{border-top:1px solid var(--linha);padding-top:14px}
+.perfil h3{margin:0 0 4px;font-size:17px;font-weight:600;color:var(--texto)}
+.perfil p{margin:0 0 10px;font-size:14px;color:var(--texto-2)}
+.perfil a{display:block;padding:7px 0;border-bottom:1px solid var(--linha);font-size:14px;color:var(--texto)}
+.perfil a:hover{color:var(--azul)}
+.perfil a:after{content:" →";color:var(--azul)}
+
+/* destaque */
+.faixa{display:flex;gap:20px;align-items:center;justify-content:space-between;border:1px solid var(--linha);border-left:4px solid var(--azul);background:#fff;padding:18px 22px}
+.faixa h3{margin:0 0 3px;font-size:17px;font-weight:600}
+.faixa p{margin:0;font-size:14px;color:var(--texto-2)}
+.btn{display:inline-block;background:var(--azul);color:#fff;padding:10px 18px;font-weight:600;font-size:14px;border:0;white-space:nowrap;cursor:pointer}
+.btn:hover{background:var(--azul-esc);text-decoration:none}
+.btn.borda{background:#fff;color:var(--azul);border:1px solid var(--azul)}
+
+/* números */
+.num{border-top:1px solid var(--linha);padding-top:12px}
+.num b{display:block;font-size:30px;font-weight:600;color:var(--azul)}
+.num span{font-size:14px;color:var(--texto-2)}
+
+/* lista de notícias/editais estilo site */
+.item-lista{border-bottom:1px solid var(--linha);padding:12px 0}
+.item-lista .cat{font-size:12px;color:var(--texto-2)}
+.item-lista b{display:block;font-size:14px;font-weight:600;text-transform:uppercase;color:var(--texto);margin:2px 0}
+.item-lista span{font-size:13px;color:#7a7a7a}
+.rapido a{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--linha);color:var(--texto);font-size:15px}
+.rapido a:hover{color:var(--azul);text-decoration:none}
+.rapido a:after{content:"→";color:var(--azul)}
+
+/* ===== PÁGINA INTERNA (submenu lateral igual ao site) ===== */
+.interna{display:grid;grid-template-columns:268px 1fr;gap:48px;padding:34px 0 50px}
+.sub-t{font-size:20px;font-weight:300;color:var(--texto);padding:4px 0 16px;border-bottom:1px solid var(--linha)}
+.submenu a{display:block;padding:15px 0;border-bottom:1px solid var(--linha);font-size:14px;font-weight:425;color:var(--texto);text-transform:uppercase}
+.submenu a.ativo{color:var(--azul);font-weight:500;background:var(--cinza-2);text-transform:none}
+.submenu a:hover{color:var(--azul);text-decoration:none}
+.conteudo h1{font-size:24px;font-weight:600;margin:6px 0 10px;text-transform:uppercase}
+.conteudo h2{font-size:18px;font-weight:600;margin:28px 0 10px;color:var(--azul)}
+.conteudo p,.conteudo li{font-size:15.5px}
+.atualizado{margin-top:34px;font-size:13px;color:#7a7a7a;border-top:1px solid var(--linha);padding-top:12px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+.tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;background:var(--azul-cl);color:var(--azul)}
+.tag.v{background:var(--verde-cl);color:var(--verde)} .tag.a{background:var(--ambar-cl);color:var(--ambar)}
+.resumo{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--linha);margin:18px 0 6px}
+.resumo div{padding:12px 14px;border-right:1px solid var(--linha)}
+.resumo div:last-child{border-right:0}
+.resumo small{display:block;font-size:12px;color:var(--texto-2)}
+.resumo b{font-size:15px;font-weight:600}
+
+/* fluxo */
+.fluxo{display:flex;flex-wrap:nowrap}
+.passo{flex:1 1 0;min-width:0;border:1px solid var(--linha);padding:12px;position:relative;margin-right:18px;background:#fff}
+.passo:not(:last-child):after{content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--azul);font-weight:700}
+.passo:last-child{margin-right:0;border-color:var(--verde);background:var(--verde-cl)}
+.passo .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--azul);color:#fff;font-size:12px;font-weight:700;align-items:center;justify-content:center}
+.passo:last-child .n{background:var(--verde)}
+.passo b{display:block;margin:6px 0 2px;font-size:14px}
+.passo span{font-size:13px;color:var(--texto-2);line-height:1.4;display:block}
+
+/* checklist */
+.aviso{background:var(--ambar-cl);border-left:4px solid var(--ambar);padding:11px 15px;font-size:14px;margin:10px 0}
+.barra{height:6px;background:var(--linha);margin:10px 0 4px}
+.barra div{height:100%;width:0;background:var(--verde);transition:width .2s}
+.check{list-style:none;margin:8px 0 0;padding:0;border-top:1px solid var(--linha)}
+.check li{display:flex;gap:12px;padding:11px 4px;border-bottom:1px solid var(--linha);font-size:15px}
+.check input{margin-top:5px;width:16px;height:16px;accent-color:var(--azul);flex-shrink:0}
+.check small{display:block;font-size:13px;color:var(--texto-2)}
+
+/* tabelas */
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{text-align:left;font-weight:600;color:var(--azul);border-bottom:2px solid var(--azul);padding:9px 10px}
+td{border-bottom:1px solid var(--linha);padding:10px;vertical-align:top}
+tr:hover td{background:var(--cinza-2)}
+.filtros{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+.filtros button{font:inherit;font-size:13px;border:1px solid #d6d6d6;background:#fff;padding:5px 13px;border-radius:14px;cursor:pointer;color:var(--texto)}
+.filtros button.on{background:var(--azul);border-color:var(--azul);color:#fff}
+
+details{border-bottom:1px solid var(--linha)}
+details:first-of-type{border-top:1px solid var(--linha)}
+summary{list-style:none;cursor:pointer;padding:14px 4px;font-weight:500;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--azul);font-size:20px;line-height:1}
+details[open] summary:after{content:"–"}
+details p{margin:0 4px 14px;color:var(--texto-2);font-size:15px}
+
+.pessoa{display:flex;gap:14px;align-items:center;border-top:1px solid var(--linha);padding-top:14px}
+.av{width:52px;height:52px;border-radius:50%;background:var(--azul-cl);color:var(--azul);display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.pessoa b{display:block;font-size:15px;font-weight:600}
+.pessoa span{font-size:13px;color:var(--texto-2)}
+
+/* ===== RODAPÉ (igual ao site) ===== */
+footer{background:var(--azul);color:#fff;margin-top:0}
+.rod{display:flex;justify-content:space-between;gap:30px;padding:46px 0 26px}
+.rod h4{margin:0 0 14px;font-size:18px;font-weight:600}
+.rod p{margin:0 0 4px;font-weight:350}
+.rss{margin-top:22px;font-size:30px;line-height:1}
+.qr{border:1px solid rgba(255,255,255,.7);padding:10px;width:180px;text-align:center;font-size:12px;font-weight:600}
+.qr .q{height:120px;margin-top:6px;background:repeating-conic-gradient(#fff 0 25%,transparent 0 50%) 0 0/12px 12px;opacity:.9}
+.rod-links{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid rgba(255,255,255,.35);padding:14px 0 18px;font-size:13px}
+.rod-links a{color:#fff;margin-left:10px}
+.padrao{height:54px;background:
+  linear-gradient(45deg,var(--azul) 25%,transparent 25%) 0 0/18px 18px,
+  linear-gradient(-45deg,#152d73 25%,transparent 25%) 0 0/18px 18px,
+  linear-gradient(135deg,#1a3787 25%,transparent 25%) 9px 9px/18px 18px,
+  #0d1f55}
+.fim{background:var(--marinho);padding:26px 0}
+.fim .ic{display:flex;gap:22px;align-items:center}
+.fim .ic div{width:52px;height:52px;border-radius:50%;border:2px solid #fff;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.fim .ic span{color:#fff;font-size:12px;font-weight:600;line-height:1.2}
+
+.view{display:none}.view.on{display:block}
+.vlibras{position:fixed;right:12px;top:45%;width:40px;height:40px;border-radius:6px;background:#1f6ff0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+
+@media (max-width:980px){
+  .marca img{height:80px} .apres,.interna{grid-template-columns:1fr} .g4{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:1fr}
+  .util{display:none} .direita{align-items:flex-start} nav.menu ul{justify-content:flex-start} .caixa{padding:22px} .resumo{grid-template-columns:repeat(2,1fr)}
+  .fluxo{flex-direction:column} .passo{margin:0 0 20px} .passo:not(:last-child):after{content:"↓";right:auto;left:50%;top:auto;bottom:-20px;transform:none}
+  .rod{flex-direction:column} .c-larga{padding:0 20px}
+}
+@media (max-width:560px){.g4,.g2{grid-template-columns:1fr} .cab{flex-direction:column;align-items:flex-start} .faixa{flex-direction:column;align-items:flex-start}}
+
+/* menus suspensos */
+nav.menu li{position:relative}
+nav.menu li.tem>a:after{content:" ▾";font-size:12px;color:#888}
+nav.menu .drop{display:none;position:absolute;right:0;top:100%;background:#fff;min-width:260px;box-shadow:0 6px 18px rgba(0,0,0,.12);border-top:3px solid var(--azul);padding:6px 0;z-index:20}
+nav.menu li:hover .drop,nav.menu li:focus-within .drop{display:block}
+nav.menu .drop a{border:0;padding:9px 16px;font-size:14px;font-weight:400;white-space:nowrap}
+nav.menu .drop a:hover{background:var(--cinza-2)}
+nav.menu .drop small{display:block;font-size:11px;color:var(--texto-2);padding:6px 16px 2px;text-transform:uppercase;letter-spacing:.4px}
+.ext:after{content:" ↗";font-size:12px}
+.mapa{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--linha)}
+.mapa div{padding:16px 18px;border-right:1px solid var(--linha)}
+.mapa div:last-child{border-right:0}
+.mapa h4{margin:0 0 8px;font-size:15px;color:var(--azul)}
+.mapa a{display:block;font-size:14px;color:var(--texto);padding:3px 0}
+.caixa-ajuda{border:1px solid var(--linha);border-left:4px solid var(--azul);padding:16px 20px;background:var(--azul-cl);margin:14px 0 22px}
+.caixa-ajuda b{display:block;margin-bottom:4px}
+.pdp-card{border:1px solid var(--linha);padding:20px}
+.pdp-card h3{margin:0 0 4px;font-size:18px}
+.pdp-card p{margin:0 0 14px;font-size:14px;color:var(--texto-2)}
+.util .busca{cursor:pointer}
+.so-mobile{display:none}
+.busca-painel{background:#fff;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha);box-shadow:0 8px 18px rgba(0,0,0,.08);padding:16px 0 10px}
+.busca-painel input{width:100%;font-size:16px;padding:11px 12px;border:1px solid #cfcfcf;border-radius:2px;font-family:inherit}
+.busca-painel input:focus{outline:2px solid var(--azul);outline-offset:0}
+#buscaRes{margin-top:8px}
+#buscaRes a{display:flex;justify-content:space-between;gap:12px;padding:9px 2px;border-bottom:1px solid var(--linha);color:var(--texto);font-size:15px}
+#buscaRes a:hover{color:var(--azul);text-decoration:none}
+#buscaRes small{color:var(--texto-2);font-size:12.5px;white-space:nowrap}
+#buscaRes .vazio{color:var(--texto-2);font-size:14px;padding:8px 2px}
+.numeros .num b{font-size:28px}
+.numeros .num a{font-size:13px}
+.passos-cppd{counter-reset:p;list-style:none;padding:0;margin:0 0 8px}
+.passos-cppd li{position:relative;padding:0 0 12px 40px}
+.passos-cppd li:before{counter-increment:p;content:counter(p);position:absolute;left:0;top:-2px;width:26px;height:26px;border-radius:50%;background:var(--azul-cl);color:var(--azul);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.centro-sig{font-weight:600;color:var(--azul);margin-right:6px}
+.tab-rep td:nth-child(3),.tab-rep th:nth-child(3){white-space:nowrap}
+@media (max-width:980px){.so-mobile{display:block}}
+@media (max-width:560px){.conteudo table{font-size:13.5px}.conteudo th,.conteudo td{padding:8px 6px}}
+@media (max-width:980px){.mapa{grid-template-columns:1fr 1fr}.mapa div{border-bottom:1px solid var(--linha)} nav.menu .drop{left:0;right:auto}}
+</style>
+</head>
+<body>
+<div class="proto"><b>PROTÓTIPO</b> — simulação de proposta elaborada pela Direção do CT/UFPB (out/2026). Não é o site oficial da CPPD. Itens marcados com <span class="novo" style="vertical-align:0">novo</span> são mudanças propostas; dados marcados como “exemplo” são ilustrativos.</div>
+
+<header>
+  <div class="c-larga cab">
+    <a class="marca" href="#inicio">
+      <img src="https://www.ufpb.br/cppd/wp-content/themes/ufpb-main/img/brasao.png" alt="Brasão UFPB">
+      <div><div class="t1">Universidade Federal da Paraíba</div><div class="t2">Comissão Permanente de Pessoal Docente</div></div>
+    </a>
+    <div class="direita">
+      <div class="util"><a href="#contato">Contato</a><a href="#">Fala.BR</a><span class="sep"></span><a href="#">Alto Contraste</a><a href="#">Cores Acessíveis</a><span class="busca" role="button" tabindex="0" aria-controls="buscaPainel" title="Buscar no site">Busca <span>⌕</span></span></div>
+      <nav class="menu"><ul>
+        <li class="tem"><a href="#sobre" data-g="comissao">A Comissão</a>
+          <div class="drop"><a href="#sobre">Sobre a CPPD</a><a href="#composicao">Composição</a><a href="#equipe">Equipe técnica</a><a href="#calendario">Calendário de reuniões</a></div></li>
+        <li class="tem"><a href="#procedimentos" data-g="normas">Procedimentos e Normativas</a>
+          <div class="drop"><a href="#procedimentos">Procedimentos <span class="ext"></span></a><a href="#resolucoes">Resoluções</a><a href="#legislacao">Legislação</a><a href="#faq">Perguntas Frequentes <span class="ext"></span></a><small>↗ abre no sistema Ajuda</small></div></li>
+        <li class="tem"><a href="#pdp" data-g="pdp">Plano de Desenvolvimento de Pessoas</a>
+          <div class="drop"><a href="#pdp">PDP 2026 (vigente)</a><a href="#pdp">PDP 2025</a></div></li>
+        <li><a href="#contato" data-g="contato">Contato</a></li>
+        <li class="so-mobile"><a href="#" class="abre-busca">Buscar ⌕</a></li>
+      </ul></nav>
+    </div>
+  </div>
+</header>
+<div class="busca-painel" id="buscaPainel" hidden><div class="c"><input id="buscaInput" type="search" placeholder="Buscar procedimento, norma ou assunto (ex.: RT, afastamento, Associado, PDP)" aria-label="Buscar no site" autocomplete="off"><div id="buscaRes" aria-live="polite"></div></div></div>
+<div class="vlibras" title="VLibras">✋</div>
+
+<main>
+<!-- ================= INÍCIO ================= -->
+<div class="view" id="v-inicio">
+  <div class="banner"></div>
+  <div class="c">
+    <div class="caixa">
+      <div class="apres">
+        <div>
+          <div class="tsec"><h2>Apresentação</h2></div>
+          <p class="texto-cinza">A CPPD (Comissão Permanente de Pessoal Docente) da UFPB é o órgão responsável por assessorar a universidade em assuntos referentes à carreira do corpo docente, como progressões funcionais e promoções. O setor recebe, analisa e emite parecer sobre os processos relacionados à carreira do professor.</p>
+          <a class="saiba" href="#sobre">Saiba mais <span>→</span></a>
+        </div>
+        <div class="foto" role="img" aria-label="Guarita da UFPB"></div>
+      </div>
+    </div>
+  </div>
+
+  <section style="padding-top:20px"><div class="c">
+    <div class="tsec azul"><h2>Mapa do site <span class="novo">nova organização dos menus</span></h2><p>Quatro menus, agrupados pelo que o docente procura.</p></div>
+    <div class="mapa">
+      <div><h4>A Comissão</h4><a href="#sobre">Sobre a CPPD</a><a href="#composicao">Composição</a><a href="#equipe">Equipe técnica</a><a href="#calendario">Calendário de reuniões</a></div>
+      <div><h4>Procedimentos e Normativas</h4><a href="#procedimentos">Procedimentos ↗</a><a href="#resolucoes">Resoluções</a><a href="#legislacao">Legislação</a><a href="#faq">Perguntas Frequentes ↗</a></div>
+      <div><h4>Plano de Desenvolvimento de Pessoas</h4><a href="#pdp">PDP 2026 (vigente)</a><a href="#pdp">PDP 2025</a></div>
+      <div><h4>Contato</h4><a href="#contato">Local e horário</a><a href="#contato">E-mail e ramal</a></div>
+    </div>
+  </div></section>
+
+  <section style="padding-top:10px"><div class="c">
+    <div class="tsec azul"><h2>Qual é a sua situação? <span class="novo">novo</span></h2><p>Atalhos para os procedimentos no sistema Ajuda.</p></div>
+    <div class="grid g4">
+      <div class="perfil"><h3>Sou recém-ingresso</h3><p>Primeiros anos na UFPB</p><a href="#procedimentos">Estágio probatório</a><a href="#procedimentos">Promoção para Adjunto</a><a href="#procedimentos">Retribuição por Titulação</a></div>
+      <div class="perfil"><h3>Quero progredir</h3><p>Progressão e promoção</p><a href="#procedimentos">Adjunto (B1–B4)</a><a href="#associado">Associado (C1–C4)</a><a href="#procedimentos">Titular</a><a href="#procedimentos">Carreira EBTT</a></div>
+      <div class="perfil"><h3>Vou me afastar</h3><p>Capacitação e pós-graduação</p><a href="#procedimentos">Licença capacitação</a><a href="#procedimentos">Afastamento curto</a><a href="#procedimentos">Afastamento longo</a><a href="#pdp">Consultar o PDP</a></div>
+      <div class="perfil"><h3>Outras situações</h3><p>Regime, correções e outros</p><a href="#procedimentos">Mudança de regime</a><a href="#procedimentos">Retroativo de progressão</a><a href="#procedimentos">RSC, RAE, colaboração técnica</a></div>
+    </div>
+    <div class="faixa" style="margin-top:34px">
+      <div><h3>Declaração de Progressões Funcionais <span class="novo">novo</span></h3><p>Pré-requisito da maioria dos processos. Solicite antes de abrir o processo no SIPAC.</p></div>
+      <a class="btn" href="#contato">Solicitar declaração</a>
+    </div>
+  </div></section>
+
+  <section style="padding-top:6px"><div class="c">
+    <div class="tsec azul"><h2>CPPD em números <span class="novo">novo</span></h2><p>Transparência ativa: indicadores atualizados mensalmente a partir do SIPAC (valores de exemplo).</p></div>
+    <div class="grid g4 numeros">
+      <div class="num"><b>412</b><span>processos analisados em 2026</span></div>
+      <div class="num"><b>18 dias</b><span>prazo médio de análise na CPPD</span></div>
+      <div class="num"><b>21%</b><span>processos baixados em diligência</span></div>
+      <div class="num"><b>12/11</b><span>próxima reunião ordinária · <a href="#calendario">pauta e atas</a></span></div>
+    </div>
+  </div></section>
+
+  <section class="cinza"><div class="c">
+    <div class="grid g2" style="gap:60px">
+      <div>
+        <div class="tsec azul"><h2>Notícias</h2></div>
+        <div class="item-lista"><div class="cat">Resoluções</div><b>Revisão da Resolução 54/2006 em andamento</b><span>Portaria 551/2026-CPPD · 19/05/2026</span></div>
+        <div class="item-lista"><div class="cat">Institucional</div><b>Homologada a nova composição da CPPD</b><span>Portaria 177/2026 · 01/07/2026</span></div>
+        <div class="mais"><a href="#">Mais Notícias →</a></div>
+      </div>
+      <div>
+        <div class="tsec azul"><h2>Editais</h2></div>
+        <div class="item-lista"><b>Estágio na Comissão Permanente de Pessoal Docente (CPPD)</b><span>Atualizado em 29/07/2026</span></div>
+        <div class="mais"><a href="#">Mais Editais →</a></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section><div class="c">
+    <div class="tsec azul"><h2>Acesso Rápido</h2></div>
+    <div class="grid g2 rapido" style="gap:0 60px">
+      <a href="#associado">Associado (C1–C4)</a><a href="#procedimentos">Estágio Probatório</a>
+      <a href="#resolucoes">Resoluções da UFPB</a><a href="#legislacao">Legislação federal</a>
+      <a href="#pdp">PDP 2026</a><a href="#composicao">Composição da CPPD</a>
+    </div>
+  </div></section>
+</div>
+
+<!-- ================= A COMISSÃO: SOBRE ================= -->
+<div class="view" id="v-sobre"><div class="c interna">
+  <aside><div class="sub-t">A Comissão</div><div class="submenu"><a class="ativo" href="#sobre">Sobre a CPPD</a><a href="#composicao">Composição</a><a href="#equipe">Equipe técnica</a><a href="#calendario">Calendário de reuniões</a></div></aside>
+  <div class="conteudo">
+    <h1>Sobre a CPPD</h1>
+    <p>A Comissão Permanente de Pessoal Docente (CPPD) é o órgão colegiado de assessoramento da Administração Superior da UFPB em matérias relativas à política de pessoal docente. Atende às carreiras do Magistério Superior e do Ensino Básico, Técnico e Tecnológico (EBTT).</p>
+    <p>Prevista no art. 26 da Lei nº 12.772/2012, a CPPD é um <b>colegiado eleito pelos pares</b>: tem um representante do Magistério Superior de cada Centro e um do EBTT de cada Unidade Acadêmica que oferta esses níveis, todos com suplentes (Res. CONSUNI nº 20/2020, art. 4º). Funciona conforme o seu Regimento Interno, aprovado por essa Resolução, e reúne-se ordinariamente uma vez por mês (art. 10). <a href="#composicao">Veja quem representa o seu Centro</a>.</p>
+
+    <h2>Responsabilidades</h2>
+    <p>Pela Lei nº 12.772/2012 (art. 26, §1º), cabe à CPPD assessorar o colegiado competente ou o dirigente máximo na formulação e no acompanhamento da política de pessoal docente, no que diz respeito a:</p>
+    <ul>
+      <li>dimensionamento da alocação de vagas docentes nas unidades acadêmicas;</li>
+      <li>contratação e admissão de professores efetivos e substitutos;</li>
+      <li>alteração do regime de trabalho docente;</li>
+      <li>avaliação do desempenho para fins de progressão e promoção funcional;</li>
+      <li>solicitação de afastamento de docentes para aperfeiçoamento, especialização, mestrado, doutorado ou pós-doutorado;</li>
+      <li>liberação de professores para programas de cooperação com outras instituições.</li>
+    </ul>
+    <p>Na UFPB, a CPPD analisa e emite parecer, entre outros, em processos de progressão e promoção funcional, retroativo de progressão, Retribuição por Titulação (RT), Reconhecimento de Saberes e Competências (RSC), estágio probatório, licença para capacitação, afastamentos, mudança de regime de trabalho, atividade esporádica (RAE), colaboração técnica e registros no Assentamento Funcional Digital (AFD). Também emite a Declaração de Progressões Funcionais, exigida na maior parte dos processos de carreira.</p>
+
+    <h2>Base legal</h2>
+    <table><thead><tr><th>Norma</th><th>O que estabelece sobre a CPPD</th></tr></thead><tbody>
+      <tr><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12772.htm#art26">Lei nº 12.772/2012, art. 26</a></td><td>Institui a CPPD em cada IFE, eleita pelos pares, e define suas atribuições de assessoramento</td></tr>
+      <tr><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12772.htm#art22">Lei nº 12.772/2012, art. 22</a></td><td>Parecer da CPPD nos pedidos de mudança de regime de trabalho</td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2020055092750d27370140153967793cb/Res_20.2020_Consuni.docx.pdf">Resolução CONSUNI nº 20/2020</a></td><td>Regimento Interno da CPPD da UFPB: estrutura, composição, competências e funcionamento</td></tr>
+    </tbody></table>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= COMPOSIÇÃO ================= -->
+<div class="view" id="v-composicao"><div class="c interna">
+  <aside><div class="sub-t">A Comissão</div><div class="submenu"><a href="#sobre">Sobre a CPPD</a><a class="ativo" href="#composicao">Composição</a><a href="#equipe">Equipe técnica</a><a href="#calendario">Calendário de reuniões</a></div></aside>
+  <div class="conteudo">
+    <h1>Composição</h1>
+    <p class="texto-cinza">Gestão 2026 – eleição realizada em 09/06/2026, homologada pela Portaria nº 177/2026.</p>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="pessoa"><div class="av">PG</div><div><b>Prof. Paulo César Geglio</b><span>Presidente · Centro de Educação · SIAPE 1668617</span></div></div>
+      <div class="pessoa"><div class="av">LA</div><div><b>Prof. Luciano Farias de Almeida</b><span>Vice-Presidente · CCEN · SIAPE 3477843</span></div></div>
+    </div>
+    <h2>Representantes por Centro <span class="novo">novo</span></h2>
+    <p class="texto-cinza" style="font-size:14px">Um representante do Magistério Superior por Centro e um do EBTT por Unidade Acadêmica que oferta esses níveis, cada um com suplente, eleitos pelos pares para mandato de 2 anos, permitida uma recondução. O membro deve estar em dedicação exclusiva e em uma das duas classes finais da carreira; ocupantes de CD, FG ou FCC e membros dos Conselhos Superiores não podem concorrer (Res. CONSUNI nº 20/2020, art. 4º).</p>
+    <table class="tab-rep"><thead><tr><th>Centro / Unidade</th><th>Titular</th><th>Suplente</th></tr></thead><tbody>
+      <tr><td><span class="centro-sig">CBIOTEC</span>Centro de Biotecnologia</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCA</span>Centro de Ciências Agrárias</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCAE</span>Centro de Ciências Aplicadas e Educação</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCEN</span>Centro de Ciências Exatas e da Natureza</td><td>Prof. Luciano Farias de Almeida (Vice-Presidente)</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCHLA</span>Centro de Ciências Humanas, Letras e Artes</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCHSA</span>Centro de Ciências Humanas, Sociais e Agrárias</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCJ</span>Centro de Ciências Jurídicas</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCM</span>Centro de Ciências Médicas</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCS</span>Centro de Ciências da Saúde</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCSA</span>Centro de Ciências Sociais Aplicadas</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CCTA</span>Centro de Comunicação, Turismo e Artes</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CE</span>Centro de Educação</td><td>Prof. Paulo César Geglio (Presidente)</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CEAR</span>Centro de Energias Alternativas e Renováveis</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CI</span>Centro de Informática</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CT</span>Centro de Tecnologia</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">CTDR</span>Centro de Tecnologia e Desenvolvimento Regional</td><td>a publicar</td><td>a publicar</td></tr>
+      <tr><td><span class="centro-sig">EBTT</span>Unidades Acadêmicas que ofertam ensino básico, técnico e tecnológico</td><td>a publicar</td><td>a publicar</td></tr>
+    </tbody></table>
+    <h2>Portarias</h2>
+    <table><thead><tr><th>Portaria</th><th>Assunto</th><th>Publicação</th><th>Baixar</th></tr></thead><tbody>
+      <tr><td>Portaria nº 177/2026 – Reitoria</td><td>Homologa a eleição e designa Presidente e Vice-Presidente</td><td>BS nº 26/2026, p. 6 (13/07/2026)</td><td><a href="https://sig-arq.ufpb.br/arquivos/2026199076525b91598992ec71ab63ace/BS_26-2026.pdf">PDF</a></td></tr>
+      <tr><td>Portaria nº 551/2026 – CPPD</td><td>Comissão interna para revisão da Res. CONSEPE 54/2006</td><td>BS nº 21/2026, p. 17 (29/05/2026)</td><td><a href="https://sig-arq.ufpb.br/arquivos/202603814458f690005575f21b1e8013c/BS_21-2026.pdf">PDF</a></td></tr>
+      <tr><td>Portaria de designação dos representantes</td><td>Titulares e suplentes por Centro</td><td>a publicar</td><td>—</td></tr>
+    </tbody></table>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= EQUIPE ================= -->
+<div class="view" id="v-equipe"><div class="c interna">
+  <aside><div class="sub-t">A Comissão</div><div class="submenu"><a href="#sobre">Sobre a CPPD</a><a href="#composicao">Composição</a><a class="ativo" href="#equipe">Equipe técnica</a><a href="#calendario">Calendário de reuniões</a></div></aside>
+  <div class="conteudo">
+    <h1>Equipe Técnica</h1>
+    <p class="texto-cinza">Servidores técnico-administrativos lotados na CPPD (fonte: SIGRH). A Secretaria é coordenada por servidor designado pela Presidência (Res. CONSUNI nº 20/2020, art. 6º). Atribuições e ramais a confirmar pela Comissão.</p>
+    <table><thead><tr><th>Servidor</th><th>Atribuição</th><th>Ramal</th></tr></thead><tbody>
+      <tr><td>Artur Carlos Galdino Mendes</td><td>a definir</td><td>—</td></tr>
+      <tr><td>Edmir José Júnior</td><td>a definir</td><td>9460</td></tr>
+      <tr><td>Karine Thainá de Amorim Coelho</td><td>a definir</td><td>—</td></tr>
+      <tr><td>Paulo Henrique de Oliveira Rebello</td><td>a definir</td><td>—</td></tr>
+      <tr><td>Rodrigo Wagner Nunes da Silva</td><td>a definir</td><td>—</td></tr>
+    </tbody></table>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= CALENDÁRIO ================= -->
+<div class="view" id="v-calendario"><div class="c interna">
+  <aside><div class="sub-t">A Comissão</div><div class="submenu"><a href="#sobre">Sobre a CPPD</a><a href="#composicao">Composição</a><a href="#equipe">Equipe técnica</a><a class="ativo" href="#calendario">Calendário de reuniões</a></div></aside>
+  <div class="conteudo">
+    <h1>Calendário de Reuniões</h1>
+    <p class="texto-cinza">A CPPD reúne-se ordinariamente uma vez por mês e, extraordinariamente, quando convocada (Res. CONSUNI nº 20/2020, art. 10). A pauta é encaminhada aos membros com pelo menos 72 horas de antecedência (arts. 9º e 11). Datas de 2026.2: exemplo.</p>
+    <table><thead><tr><th>Data</th><th>Tipo</th><th>Pauta publicada até</th><th>Pauta / Ata</th></tr></thead><tbody>
+      <tr><td>10/09/2026</td><td>Ordinária</td><td>07/09/2026</td><td><a href="#">Pauta</a> · <a href="#">Ata</a></td></tr>
+      <tr><td>08/10/2026</td><td>Ordinária</td><td>05/10/2026</td><td><a href="#">Pauta</a> · ata em aprovação</td></tr>
+      <tr><td>12/11/2026</td><td>Ordinária</td><td>09/11/2026</td><td>—</td></tr>
+      <tr><td>10/12/2026</td><td>Ordinária</td><td>07/12/2026</td><td>—</td></tr>
+    </tbody></table>
+    <h2>Como o seu processo é apreciado <span class="novo">novo</span></h2>
+    <ol class="passos-cppd">
+      <li>A Presidência distribui o processo a um membro relator, rigorosamente pela ordem de chegada à CPPD (arts. 7º, IV, e 9º, VI).</li>
+      <li>O relator analisa e pode baixar o processo em diligência para esclarecimentos (art. 8º, III).</li>
+      <li>O parecer do relator vai à reunião, e o colegiado delibera por maioria dos presentes, com quórum de mais da metade dos membros (art. 14).</li>
+      <li>A Secretaria dá encaminhamento ao processo após a deliberação (art. 9º, VII); a ata é aprovada na reunião seguinte (art. 13).</li>
+    </ol>
+    <h2>Deliberações e relatório anual <span class="novo">novo</span></h2>
+    <table><thead><tr><th>Documento</th><th>Conteúdo</th><th>Acesso</th></tr></thead><tbody>
+      <tr><td>Entendimentos da CPPD</td><td>Decisões que orientam casos recorrentes (ex.: contagem de interstício, documentos aceitos)</td><td>a publicar</td></tr>
+      <tr><td>Relatório anual de atividades</td><td>Processos recebidos, prazos e resultados do ano, elaborado pela Presidência (art. 7º, VIII)</td><td>a publicar</td></tr>
+    </tbody></table>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= PROCEDIMENTOS (→ AJUDA) ================= -->
+<div class="view" id="v-procedimentos"><div class="c interna">
+  <aside><div class="sub-t">Procedimentos e Normativas</div><div class="submenu"><a class="ativo" href="#procedimentos">Procedimentos ↗</a><a href="#resolucoes">Resoluções</a><a href="#legislacao">Legislação</a><a href="#faq">Perguntas Frequentes ↗</a></div></aside>
+  <div class="conteudo">
+    <h1>Procedimentos</h1>
+    <div class="caixa-ajuda"><b>Os procedimentos ficam no sistema Ajuda.</b>Cada procedimento traz o passo a passo no SIPAC, a lista de documentos, prazos, base legal e os <b>formulários para download</b>. Os links abaixo abrem a página correspondente no Ajuda.</div>
+    <div class="filtros" id="filtros"><button class="on" data-f="todos">Todos</button><button data-f="P">Progressão</button><button data-f="E">EBTT</button><button data-f="A">Afastamentos</button><button data-f="O">Outros</button></div>
+    <table id="tab"><thead><tr><th>Procedimento no Ajuda</th><th>Primeira etapa (SIPAC)</th><th>Formulários incluídos</th></tr></thead><tbody>
+      <tr data-c="O"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd001-declaracao-de-progressoes-funcionais" target="_blank">Declaração de Progressões Funcionais</a></td><td>Solicitação à CPPD</td><td>—</td></tr>
+      <tr data-c="P"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd002-promocao-para-professor-adjunto-classe-b-magisterio-superior" target="_blank">Promoção para Adjunto (Classe B)</a></td><td>CPPD (11.00.46.91)</td><td>Requerimento</td></tr>
+      <tr data-c="P"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd003-progressao-funcional-na-classe-de-adjunto-b1-a-b4" target="_blank">Progressão em Adjunto (B1–B4)</a></td><td>Departamento</td><td>Modelo de relatório</td></tr>
+      <tr data-c="P"><td><a class="ext" href="#associado"><b>Associado (C1–C4)</b></a> — ver exemplo</td><td>CPPD (11.00.46.91)</td><td>Requerimento, modelo de relatório</td></tr>
+      <tr data-c="P"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd005-promocao-para-professor-titular-classe-d-magisterio-superior" target="_blank">Titular (Classe D)</a></td><td>CPPD (11.00.46.91)</td><td>Requerimento Titular</td></tr>
+      <tr data-c="E"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd006-progressao-e-promocao-ebtt-a1-a-b4" target="_blank">Progressão EBTT A1–B4</a></td><td>Departamento</td><td>Requerimento</td></tr>
+      <tr data-c="E"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd007-progressao-e-promocao-ebtt-c1-a-c4" target="_blank">Progressão EBTT C1–C4</a></td><td>CPPD (11.00.46.91)</td><td>Requerimento</td></tr>
+      <tr data-c="E"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd008-promocao-para-a-classe-titular-ebtt" target="_blank">Titular EBTT</a></td><td>CPPD (11.00.46.91)</td><td>Requerimento Titular</td></tr>
+      <tr data-c="A"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd009-licenca-para-capacitacao" target="_blank">Licença para capacitação</a></td><td>CPPD</td><td>Formulário de afastamento</td></tr>
+      <tr data-c="A"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd010-afastamento-de-curtissima-e-de-curta-duracao" target="_blank">Afastamento curtíssimo e curto</a></td><td>Departamento</td><td>Formulário de afastamento</td></tr>
+      <tr data-c="A"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd011-afastamento-de-longa-duracao-pos-graduacao-e-pos-doutorado" target="_blank">Afastamento longo (pós-graduação)</a></td><td>Departamento</td><td>Formulário de afastamento, termos</td></tr>
+      <tr data-c="O"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd012-estagio-probatorio-docente-inclui-avaliagov" target="_blank">Estágio probatório</a></td><td>Departamento + AvaliaGov</td><td>Lista de documentos</td></tr>
+      <tr data-c="O"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd013-mudanca-de-regime-de-trabalho-20-h-40-h-de" target="_blank">Mudança de regime de trabalho</a></td><td>Departamento</td><td>Termo de responsabilidade</td></tr>
+      <tr data-c="O"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd014-retribuicao-por-titulacao-rt" target="_blank">Retribuição por Titulação (RT)</a></td><td>CPPD</td><td>Requerimento</td></tr>
+      <tr data-c="O"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd015-retroativo-de-progressao-retificacao-de-portaria" target="_blank">Retroativo de progressão</a></td><td>CPPD</td><td>Requerimento</td></tr>
+      <tr data-c="O"><td><a class="ext" href="https://ajuda.ct.ufpb.br/books/cppd-procedimentos/page/cppd016-outros-processos-rsc-atividade-esporadicarae-colaboracao-tecnica-afd" target="_blank">RSC · RAE · Colaboração técnica · AFD</a></td><td>CPPD</td><td>a publicar</td></tr>
+    </tbody></table>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= EXEMPLO DE PROCEDIMENTO (como fica no AJUDA) ================= -->
+<div class="view" id="v-associado"><div class="c interna">
+  <aside><div class="sub-t">Procedimentos e Normativas</div><div class="submenu"><a href="#procedimentos">← Todos os procedimentos</a><a class="ativo" href="#associado">Associado (C1–C4)</a></div></aside>
+  <div class="conteudo">
+    <div class="caixa-ajuda" style="margin-top:0"><b>Exemplo de como o procedimento aparece no sistema Ajuda</b>Mesmo modelo para todos os procedimentos; os formulários ficam dentro da página.</div>
+    <h1>Promoção e progressão – Associado (C1–C4)</h1>
+    <div class="tags"><span class="tag">Magistério Superior</span><span class="tag v">Direto à CPPD</span><span class="tag a">Prazo médio: 18 dias (exemplo)</span></div>
+    <div class="resumo"><div><small>Destino no SIPAC</small><b>11.00.46.91</b></div><div><small>Interstício</small><b>24 meses</b></div><div><small>Passa pelo Departamento?</small><b>Não</b></div><div><small>Atendimento</small><b>cppd@reitoria.ufpb.br</b></div></div>
+    <h2>O que é</h2>
+    <p>A <b>promoção</b> leva o docente do nível Adjunto 4 à Classe C (Associado 1) e exige o título de doutor; a <b>progressão</b> é a passagem entre os níveis C1, C2, C3 e C4. Nos dois casos, exigem-se 24 meses de efetivo exercício no nível atual e aprovação na avaliação de desempenho (Lei nº 12.772/2012, art. 12).</p>
+    <h2>Como tramita</h2>
+    <div class="fluxo">
+      <div class="passo"><span class="n">1</span><b>Pedir a declaração</b><span>Progressões Funcionais, por e-mail à CPPD</span></div>
+      <div class="passo"><span class="n">2</span><b>Reunir documentos</b><span>Seguir a lista abaixo, na ordem</span></div>
+      <div class="passo"><span class="n">3</span><b>Abrir no SIPAC</b><span>Enviar à CPPD (11.00.46.91)</span></div>
+      <div class="passo"><span class="n">4</span><b>Análise da CPPD</b><span>Parecer ou diligência</span></div>
+      <div class="passo"><span class="n">✓</span><b>Portaria</b><span>Publicação e efeito financeiro</span></div>
+    </div>
+    <h2>Formulários</h2>
+    <p><a href="https://www.ufpb.br/cppd/wp-content/uploads/sites/79/sites/199/2026/07/Requerimento-para-progressao-ASSOCIADO.doc">📄 Requerimento Associado (.doc)</a> &nbsp;·&nbsp; <a href="https://www.ufpb.br/cppd/wp-content/uploads/sites/79/sites/199/2026/07/Modelo-relatorio-padrao-associado.docx">📄 Modelo de relatório padrão (.docx)</a></p>
+    <h2>Documentos obrigatórios — lista de verificação</h2>
+    <div class="aviso">Anexe <b>cada item separadamente</b>, na ordem abaixo. Não junte documentos em um único PDF.</div>
+    <div class="barra"><div id="barra"></div></div><small id="cont" class="texto-cinza">0 de 7 itens conferidos</small>
+    <ul class="check" id="lista">
+      <li><input type="checkbox"><div>Requerimento correspondente ao nível pretendido<small>Modelo CPPD · cadastrar como documento restrito</small></div></li>
+      <li><input type="checkbox"><div>Declaração de Progressões Funcionais (atualizada)<small>Emitida pela CPPD</small></div></li>
+      <li><input type="checkbox"><div>Diploma de Doutorado (frente e verso)<small>Somente para Associado 1</small></div></li>
+      <li><input type="checkbox"><div>Declaração de Disciplinas Ministradas<small>Emitida pelo SIGAA</small></div></li>
+      <li><input type="checkbox"><div>Currículo Lattes atualizado</div></li>
+      <li><input type="checkbox"><div>Relatório Individual de Atividades (modelo CPPD)<small>Referente aos períodos letivos do interstício</small></div></li>
+      <li><input type="checkbox"><div>Documentos comprobatórios, separados por seção<small>I Ensino · II Produção Intelectual · III Pesquisa · IV Extensão · V Administrativas · VI Representação · VII Outras · VIII Qualificação</small></div></li>
+    </ul>
+    <h2>Base legal</h2>
+    <p><a href="#legislacao">Lei 12.772/2012, art. 12</a> · <a href="#resolucoes">Res. CONSEPE 54/2006</a> (em revisão) · <a href="#resolucoes">Res. CONSEPE 38/2025</a></p>
+  </div>
+</div></div>
+
+<!-- ================= RESOLUÇÕES ================= -->
+<div class="view" id="v-resolucoes"><div class="c interna">
+  <aside><div class="sub-t">Procedimentos e Normativas</div><div class="submenu"><a href="#procedimentos">Procedimentos ↗</a><a class="ativo" href="#resolucoes">Resoluções</a><a href="#legislacao">Legislação</a><a href="#faq">Perguntas Frequentes ↗</a></div></aside>
+  <div class="conteudo">
+    <h1>Resoluções</h1>
+    <p class="texto-cinza">Resoluções dos Conselhos Superiores da UFPB aplicadas pela CPPD. Os links abrem o documento oficial no SIGRH.</p>
+    <table><thead><tr><th>Resolução</th><th>Assunto</th><th>Situação</th></tr></thead><tbody>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2020055092750d27370140153967793cb/Res_20.2020_Consuni.docx.pdf">CONSUNI 20/2020</a></td><td>Regimento Interno da CPPD</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2016228077660e235444b52c8cb434b1/RES._N05-1999.pdf">CONSUNI 05/1999</a></td><td>Avaliação de docentes em estágio probatório</td><td><span class="tag v">Vigente</span> alterada pelas 05/2021 e 15/2022</td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/202113511765233198567fd532a3e9c41/Res._05.2021_Consuni.pdf">CONSUNI 05/2021</a></td><td>Altera a Res. 05/1999 (estágio probatório)</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2022164067c9874731038b629ae9476d6/Resoluo_n_15.2022_Consuni.pdf">CONSUNI 15/2022</a></td><td>Altera a Res. 05/1999 (estágio probatório)</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/20162291297a022388268fc3a3fa090f/RES._N37-1999.pdf">CONSEPE 37/1999</a></td><td>Progressão funcional do Magistério Superior</td><td><span class="tag v">Vigente</span> alterada pelas 06/2001 e 38/2025</td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2016225228a8ad294540c3a700d28404/RES._N06-2001.pdf">CONSEPE 06/2001</a></td><td>Altera a Res. 37/1999</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2016060151dad2237566bb38d4c6f194/RES._N27-2001.compressed.pdf">CONSEPE 27/2001</a></td><td>Avaliação do desempenho docente</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/20161821133b5e229408633670c0b5d8/Rsep54_2006.htm">CONSEPE 54/2006</a></td><td>Progressão para a Classe de Associado</td><td><span class="tag a">Em revisão</span> Portaria 551/2026-CPPD</td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/201512521200400961531f4544af1ddd/Rsep33_2014.pdf">CONSEPE 33/2014</a></td><td>Promoção para Titular – Magistério Superior</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/201505602780ed09616866733827aee3/Rsep44_2014.pdf">CONSEPE 44/2014</a></td><td>Promoção para Titular – EBTT</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/20191710623fa21256792ee938ad29633/Resp05.19.pdf">CONSEPE 05/2019</a></td><td>Progressão e promoção – EBTT</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2016127169adf522920793defb19d3c5/Rsep072004.htm">CONSEPE 07/2004</a></td><td>Política de capacitação docente e afastamentos</td><td><span class="tag v">Vigente</span> alterada pela 44/2004</td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/20160591859f3c229205c4c2b71c8edc/Rsep442004.htm">CONSEPE 44/2004</a></td><td>Altera a Res. 07/2004</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2016036249a67b22518869cb65db7f34/Rsep64_2009.pdf">CONSEPE 64/2009</a></td><td>Mudança de regime de trabalho</td><td><span class="tag v">Vigente</span></td></tr>
+      <tr><td><a href="https://sig-arq.ufpb.br/arquivos/2025103157660a78128198cff9b14cfd0/Resoluo_Consepe_n_38.2025.pdf">CONSEPE 38/2025</a></td><td>Interstício e pontuação durante licenças gestante, maternidade, adotante e saúde</td><td><span class="tag v">Vigente</span></td></tr>
+    </tbody></table>
+    <p style="margin-top:14px;font-size:14px">Outras resoluções: <a href="https://sigrh.ufpb.br/sigrh/public/colegiados/filtro_busca.jsf">busca de resoluções no SIGRH</a>.</p>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= LEGISLAÇÃO ================= -->
+<div class="view" id="v-legislacao"><div class="c interna">
+  <aside><div class="sub-t">Procedimentos e Normativas</div><div class="submenu"><a href="#procedimentos">Procedimentos ↗</a><a href="#resolucoes">Resoluções</a><a class="ativo" href="#legislacao">Legislação</a><a href="#faq">Perguntas Frequentes ↗</a></div></aside>
+  <div class="conteudo">
+    <h1>Legislação</h1>
+    <p class="texto-cinza">Leis, decretos e instruções normativas federais que regem a carreira docente.</p>
+    <table><thead><tr><th>Norma</th><th>Assunto</th><th>Pontos de interesse</th></tr></thead><tbody>
+      <tr><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12772.htm">Lei nº 12.772/2012</a></td><td>Plano de Carreiras e Cargos de Magistério Federal</td><td>Arts. 12–15 (progressão), 17–18 (RT), 20–22 (regime), 23–25 (estágio probatório), 26 (CPPD), 30 (afastamentos)</td></tr>
+      <tr><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15141.htm">Lei nº 15.141/2025</a></td><td>Reestruturação de carreiras</td><td>Nova estrutura de classes A–D; interstício de 36 meses para Adjunto</td></tr>
+      <tr><td><a href="https://www.planalto.gov.br/ccivil_03/leis/l8112cons.htm">Lei nº 8.112/1990</a></td><td>Regime Jurídico dos Servidores</td><td>Art. 87 (licença capacitação); arts. 95 e 96-A (afastamentos)</td></tr>
+      <tr><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/decreto/d9991.htm">Decreto nº 9.991/2019</a></td><td>Política Nacional de Desenvolvimento de Pessoas</td><td>PDP, licença capacitação e afastamentos</td></tr>
+      <tr><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/decreto/d10835.htm">Decreto nº 10.835/2021</a></td><td>Cessões e requisições</td><td>Art. 9º, §5º: progressão do servidor requisitado</td></tr>
+      <tr><td><a href="https://legis.sigepe.gov.br/legis/detalhar/23663">IN SGP/SEDGG/ME nº 66/2022</a></td><td>Progressão funcional e promoção (consolida as orientações do órgão central do SIPEC)</td><td>Art. 36: diploma como prova da titulação na progressão e na promoção; sua aplicação à RT é controvertida (ver Perguntas Frequentes)</td></tr>
+    </tbody></table>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= FAQ (→ AJUDA) ================= -->
+<div class="view" id="v-faq"><div class="c interna">
+  <aside><div class="sub-t">Procedimentos e Normativas</div><div class="submenu"><a href="#procedimentos">Procedimentos ↗</a><a href="#resolucoes">Resoluções</a><a href="#legislacao">Legislação</a><a class="ativo" href="#faq">Perguntas Frequentes ↗</a></div></aside>
+  <div class="conteudo">
+    <h1>Perguntas Frequentes</h1>
+    <div class="caixa-ajuda"><b>As perguntas frequentes ficam no sistema Ajuda.</b>Abaixo, uma amostra; a lista completa e atualizada fica no Ajuda, junto aos procedimentos.</div>
+    <details><summary>Para onde envio meu processo no SIPAC: Departamento ou CPPD?</summary><p>Associado, Titular, EBTT C, RT, retroativo e promoção para Adjunto vão direto à CPPD (11.00.46.91). Adjunto B1–B4, EBTT A–B, afastamentos e mudança de regime começam pelo Departamento.</p></details>
+    <details><summary>Licença-maternidade ou licença para tratamento de saúde atrasam a minha progressão?</summary><p>Não. A Res. CONSEPE 38/2025 assegura que o tempo de licença gestante, maternidade, adotante ou para tratamento de saúde conte no interstício, com pontuação proporcional a cada mês de licença.</p></details>
+    <details><summary>Documento restrito ou ostensivo?</summary><p>Documentos com dados pessoais, como o requerimento, devem ser cadastrados como restritos. Os demais, como ostensivos.</p></details>
+    <details><summary>Defendi a tese, mas só tenho a ata de defesa. Posso pedir a RT?</summary><p>Pode protocolar o pedido, mas o tema não é pacífico. A CPPD pede o diploma, e a IN SGP/SEDGG/ME 66/2022 (art. 36) o exige na progressão e na promoção; o TRF1 aplicou essa regra à RT em 2026. Em 2019, porém, orientações do Ministério da Economia e do MEC admitiram a ata de defesa sem pendências acompanhada de comprovante de expedição do diploma, e há decisões judiciais favoráveis ao docente. Protocole logo após a defesa e junte o diploma quando o receber.</p></details>
+    <p style="margin-top:18px"><a class="btn" href="https://ajuda.ct.ufpb.br/books/cppd-perguntas-frequentes" target="_blank">Ver todas no sistema Ajuda ↗</a></p>
+  </div>
+</div></div>
+
+<!-- ================= PDP ================= -->
+<div class="view" id="v-pdp"><div class="c interna">
+  <aside><div class="sub-t">Plano de Desenvolvimento de Pessoas</div><div class="submenu"><a class="ativo" href="#pdp">PDP 2026 (vigente)</a><a href="#pdp">PDP 2025</a></div></aside>
+  <div class="conteudo">
+    <h1>Plano de Desenvolvimento de Pessoas</h1>
+    <p>O Plano de Desenvolvimento de Pessoas (PDP) lista as necessidades de desenvolvimento da UFPB para cada ano, conforme o <a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/decreto/d9991.htm">Decreto nº 9.991/2019</a>. É elaborado pela PROGEP.</p>
+    <div class="aviso"><b>Por que importa para o docente:</b> a licença para capacitação e os afastamentos só podem ser concedidos para ações previstas no PDP vigente. O processo deve incluir a <b>cópia do trecho do PDP e a linha correspondente</b>, em PDF.</div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="pdp-card"><span class="tag v">Vigente</span><h3 style="margin-top:8px">PDP 2026</h3><p>Ações de desenvolvimento previstas para 2026.</p><a class="btn" href="https://docs.google.com/spreadsheets/d/1UjNiGH9PEfn6ruAbQlhmsyfaOffljly5n7ILQhywlAI/edit">Abrir planilha ↗</a></div>
+      <div class="pdp-card"><span class="tag">Anterior</span><h3 style="margin-top:8px">PDP 2025</h3><p>Ações de desenvolvimento previstas para 2025.</p><a class="btn borda" href="https://docs.google.com/spreadsheets/d/1tM1UkzMFQWIYxLIs6CEW_oY3ntDANnmAML4DLvYV8b0/edit">Abrir planilha ↗</a></div>
+    </div>
+    <h2>Como localizar a sua linha no PDP</h2>
+    <ol>
+      <li>Abra a planilha do ano do afastamento.</li>
+      <li>Procure a necessidade de desenvolvimento ligada à sua área ou unidade.</li>
+      <li>Salve o trecho e a linha em PDF e anexe ao processo.</li>
+    </ol>
+    <p style="font-size:14px">Planos anteriores: <a href="https://www.progep.ufpb.br/plano-de-desenvolvimento-de-pessoas-pdp/">página do PDP na PROGEP</a>.</p>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+
+<!-- ================= CONTATO ================= -->
+<div class="view" id="v-contato"><div class="c interna">
+  <aside><div class="sub-t">Contato</div></aside>
+  <div class="conteudo">
+    <h1>Contato</h1>
+    <h2>Local de Trabalho</h2>
+    <p>A Comissão Permanente de Pessoal Docente (CPPD) realiza atendimento no 1º andar do prédio da Reitoria, em sala localizada próximo à Ouvidoria.</p>
+    <h2>Contato do setor</h2>
+    <table><tbody>
+      <tr><td><b>E-mail</b></td><td><a href="mailto:cppd@reitoria.ufpb.br">cppd@reitoria.ufpb.br</a></td></tr>
+      <tr><td><b>Telefone</b></td><td>(83) 3216-7200 (central da UFPB) – ramal 9460</td></tr>
+      <tr><td><b>Unidade no SIPAC</b></td><td>REITORIA – COMISSÃO PERMANENTE DE PESSOAL DOCENTE (11.00.46.91)</td></tr>
+      <tr><td><b>Horário de atendimento</b></td><td>a publicar pela CPPD <span class="texto-cinza" style="font-size:13px">(divulgação exigida pela LAI, art. 8º, §1º, I)</span></td></tr>
+      <tr><td><b>Equipe</b></td><td><a href="#equipe">Servidores da CPPD</a> · <a href="#composicao">representante do seu Centro</a></td></tr>
+    </tbody></table>
+    <h2>Antes de escrever <span class="novo">novo</span></h2>
+    <ol class="passos-cppd">
+      <li>Consulte o procedimento e as <a href="https://ajuda.ct.ufpb.br/books/cppd-perguntas-frequentes" target="_blank">Perguntas Frequentes</a> no sistema Ajuda: a maioria das dúvidas já tem resposta.</li>
+      <li>Para saber em que etapa está o seu processo, consulte a tramitação no SIPAC pelo número do processo.</li>
+      <li>Se ainda precisar escrever, use no assunto o tipo de pedido e o seu SIAPE (ex.: <i>Declaração de Progressões – SIAPE 1234567</i>) e informe o número do processo, se houver.</li>
+    </ol>
+    <h2>Declaração de Progressões Funcionais</h2>
+    <p>Solicite por e-mail, informando nome completo, SIAPE e a finalidade (ex.: promoção para Associado 1 ou progressão para Associado 2).</p>
+    <div class="atualizado">Última atualização: quarta-feira, 14 de outubro de 2026</div>
+  </div>
+</div></div>
+</main>
+
+<footer>
+  <div class="c">
+    <div class="rod">
+      <div><h4>Comissão Permanente de Pessoal Docente</h4><p>Cidade Universitária, João Pessoa - Paraíba</p><p>CEP: 58.051-900</p><p style="margin-top:12px">Telefone: +55 (83) 3216-7200</p><div class="rss">◉</div></div>
+      <div class="qr">Consulte o cadastro da UFPB no e-MEC<div class="q"></div></div>
+    </div>
+    <div class="rod-links"><span>© 2026 Universidade Federal da Paraíba. · Protótipo – Direção do CT</span><span><a href="#">Ouvidoria</a><a href="#">Acesso à Informação</a><a href="#">CoMu</a><a href="#">Acessibilidade</a><a href="#">Dados Abertos UFPB</a><a href="#">Privacidade e Proteção de Dados</a></span></div>
+  </div>
+  <div class="padrao"></div>
+  <div class="fim"><div class="c ic"><div>Fala<br>BR</div><div>i</div><span>Acesso à<br>Informação</span></div></div>
+</footer>
+
+<script>
+var grupo={sobre:'comissao',composicao:'comissao',equipe:'comissao',calendario:'comissao',procedimentos:'normas',associado:'normas',resolucoes:'normas',legislacao:'normas',faq:'normas',pdp:'pdp',contato:'contato'};
+function mostrar(){var v=(location.hash||'#inicio').slice(1); if(!document.getElementById('v-'+v)) v='inicio';
+  document.querySelectorAll('.view').forEach(function(e){e.classList.toggle('on',e.id==='v-'+v)});
+  document.querySelectorAll('nav.menu a[data-g]').forEach(function(a){a.classList.toggle('ativo',a.dataset.g===grupo[v])}); window.scrollTo(0,0);}
+window.addEventListener('hashchange',mostrar); mostrar();
+var cx=document.querySelectorAll('#lista input');
+cx.forEach(function(c){c.addEventListener('change',function(){var n=0;cx.forEach(function(x){if(x.checked)n++});
+  document.getElementById('barra').style.width=(n/cx.length*100)+'%';document.getElementById('cont').textContent=n+' de '+cx.length+' itens conferidos';})});
+/* busca no site (protótipo) */
+var IDX=[];
+document.querySelectorAll('#tab tbody tr').forEach(function(tr){var a=tr.querySelector('a');IDX.push({t:a.textContent.trim(),h:a.getAttribute('href'),d:'Procedimento no Ajuda',x:a.target==='_blank'});});
+[['Sobre a CPPD','#sobre','atribuições base legal colegiado'],['Composição','#composicao','membros representantes Centro titular suplente portarias presidente'],['Equipe técnica','#equipe','servidores secretaria'],['Calendário de reuniões','#calendario','pauta ata deliberações reunião relatório anual'],['Resoluções','#resolucoes','CONSEPE CONSUNI normas internas'],['Legislação','#legislacao','Lei 12.772 decreto instrução normativa IN 66'],['Perguntas Frequentes','#faq','dúvidas'],['Plano de Desenvolvimento de Pessoas (PDP)','#pdp','PDP afastamento licença capacitação'],['Contato','#contato','e-mail ramal telefone horário atendimento']].forEach(function(x){IDX.push({t:x[0],h:x[1],d:'Página do site',k:x[2]});});
+document.querySelectorAll('#v-faq details summary').forEach(function(s){IDX.push({t:s.textContent,h:'#faq',d:'Pergunta frequente'});});
+document.querySelectorAll('#v-resolucoes tbody tr').forEach(function(tr){var a=tr.querySelector('a');IDX.push({t:'Res. '+a.textContent+' – '+tr.children[1].textContent,h:a.getAttribute('href'),d:'Resolução',x:true});});
+document.querySelectorAll('#v-legislacao tbody tr').forEach(function(tr){var a=tr.querySelector('a');IDX.push({t:a.textContent+' – '+tr.children[1].textContent,h:a.getAttribute('href'),d:'Legislação',x:true});});
+function nrm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
+var painel=document.getElementById('buscaPainel'),inp=document.getElementById('buscaInput'),res=document.getElementById('buscaRes');
+function abreBusca(e){if(e)e.preventDefault();painel.hidden=!painel.hidden;if(!painel.hidden){inp.focus();}}
+document.querySelectorAll('.util .busca,.abre-busca').forEach(function(b){b.addEventListener('click',abreBusca);b.addEventListener('keydown',function(e){if(e.key==='Enter')abreBusca(e);});});
+inp.addEventListener('keydown',function(e){if(e.key==='Escape'){painel.hidden=true;}});
+inp.addEventListener('input',function(){var q=nrm(inp.value).split(/\s+/).filter(Boolean);res.innerHTML='';if(!q.length)return;
+  var r=IDX.filter(function(it){var s=nrm(it.t+' '+it.d+' '+(it.k||''));return q.every(function(w){return w.length<=3?new RegExp('(^|[^a-z0-9])'+w.replace(/[^a-z0-9]/g,'')+'([^a-z0-9]|$)').test(s):s.indexOf(w)>=0;});}).slice(0,8);
+  if(!r.length){res.innerHTML='<div class="vazio">Nada encontrado. Tente outro termo ou veja as <a href="#faq">Perguntas Frequentes</a>.</div>';return;}
+  r.forEach(function(it){var a=document.createElement('a');a.href=it.h;if(it.x)a.target='_blank';a.innerHTML='<span></span><small></small>';a.firstChild.textContent=it.t+(it.x?' ↗':'');a.lastChild.textContent=it.d;a.addEventListener('click',function(){painel.hidden=true;});res.appendChild(a);});});
+document.querySelectorAll('#filtros button').forEach(function(b){b.addEventListener('click',function(){
+  document.querySelectorAll('#filtros button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+  document.querySelectorAll('#tab tbody tr').forEach(function(tr){tr.style.display=(b.dataset.f==='todos'||tr.dataset.c===b.dataset.f)?'':'none'})})});
+</script>
+
+</body>
+</html>
